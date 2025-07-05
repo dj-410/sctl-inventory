@@ -26,3 +26,5 @@ dist-ssr
 # Don't ignore the frontend build in src/dist
 !src/dist
 !src/dist/**
+!backend/dist
+!backend/dist/**

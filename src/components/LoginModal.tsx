@@ -12,32 +12,32 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLogin, onCancel }) => 
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
-      const data = await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (response.ok) {
-        // Save token if needed (optional for now)
-        localStorage.setItem('token', data.token || '');
+    const data = await response.json();
 
-        // Pass username (or name) back to App
-        onLogin(data.user.name || data.user.email);
-      } else {
-        setError(data.message || 'Invalid credentials');
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Unable to connect to the server');
+    if (response.ok) {
+      localStorage.setItem('token', data.token || '');
+      onLogin(data.user.name || data.user.email);
+    } else {
+      setError(data.message || 'Invalid credentials');
     }
-  };
+  } catch (err) {
+    console.error('Login error:', err);
+    setError('Unable to connect to the server');
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
